@@ -33,11 +33,12 @@ body {
   width: fit-content;
   margin: 40px auto;
   text-align: center;
+  /* background-color: red; */
 }
 
 .board h1 {
-  color: #eee;
-  margin-bottom: 16px;
+  color: #d7d795;
+  margin-bottom: 16px; 
 }
 
 .board button {
@@ -62,6 +63,9 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  border: 1px solid beige;
+  border-radius: 1rem;
+  padding: 1rem;
 }
 
 .turn {
@@ -81,9 +85,15 @@ body {
   border-color: transparent;
 }
 
-.square.is-selected {
+
+
+.square.is-turned {
+  background-color: transparent;
+}
+
+.square.is-turned.is-selected {
   color: #fff;
-  background: #09f;
+  background: #d7d795;
 }
 
 .winner {
@@ -122,10 +132,11 @@ body {
 .square {
   width: 100px;
   height: 100px;
-  border: 2px solid #eee;
+  border: 2px solid beige;
   border-radius: 5px;
   display: grid;
   place-items: center;
   cursor: pointer;
   font-size: 48px;
+  background-color: rgb(215, 215, 149);
 }
