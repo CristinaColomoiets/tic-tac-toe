@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import confetti from 'canvas-confetti'
 
 
 const TURNS = {
@@ -45,17 +46,10 @@ function App() {
   const [winner, setWinner] = useState(null)
   const [popUpWinnerOpened, setpopUpWinnerOpened] = useState(false);
 
-  useEffect(() => {
-    if (winner) {
-      setTimeout(() => {
-        setpopUpWinnerOpened(true);
-      }, 1000)
-    }else{
-      setpopUpWinnerOpened(false);
-      
-    }
-  }, 
-  [winner])
+
+  const checkEndGame = (newBoard) => {
+    return newBoard.every((square)=> square != null)
+  }
 
 
   const updateBoard = (index) =>{
@@ -72,10 +66,14 @@ function App() {
     const newTurn = turn == TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
 
+    //check the winner
     const newWinner = checkWinner(newBoard)
+
     if(newWinner){
+      confetti()
       setWinner(newWinner)
-      // TODO: check if game is over
+    }else if(checkEndGame(newBoard)){
+      setWinner(false)
     }
   }
 
@@ -98,6 +96,20 @@ function App() {
   }
 
 
+  // Using useEffect with other useState for execute setTimeOut, because this one no works alone
+  useEffect(() => {
+    if (winner) {
+      setTimeout(() => {
+        setpopUpWinnerOpened(true);
+      }, 700)
+    }else{
+      setpopUpWinnerOpened(false);
+      
+    }
+  }, 
+  [winner])
+
+
   const resetGame = ()=>{
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
@@ -112,15 +124,14 @@ function App() {
 
     <section className='game'>
       {
-        board.map((_, index)=>{
+        board.map((square, index)=>{
           return (
             <Square 
               key={index} 
               index={index}
               updateBoard = {updateBoard}
-
             >
-            {board[index]}
+            {square}
             </Square>
           )
         })
@@ -132,15 +143,18 @@ function App() {
       <Square isTurned={true} isSelected={turn == TURNS.O}>{TURNS.O}</Square>
     </section>
 
+    <button onClick={resetGame}>reset game</button>
+
       {
         popUpWinnerOpened && (
+
           <section className='pop-up-winner'>
             <div className='pop-up-text'>
               <h2>
                 {
                   winner == false
-                  ? 'Empate'
-                  : 'Ganó: '
+                  ? 'Tie'
+                  : 'Won: '
                 }
               </h2>
 
@@ -152,7 +166,7 @@ function App() {
                 }
               </div>
 
-              <button onClick={resetGame}>Empezar de nuevo</button>
+              <button onClick={resetGame}>Start again</button>
             </div>
           </section>
 
